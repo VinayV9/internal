@@ -5,13 +5,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MaterialdesignModule } from './modules/materialdesign/materialdesign.module';
 import { SocialLoginModule, AuthServiceConfig, GoogleLoginProvider } from 'angularx-social-login';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FeedComponent } from './components/feed/feed.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { CreateComponent } from './components/create/create.component';
+import { AuthGuard } from './gaurds/auth.gaurd';
+import { SharedServiceService } from './services/shared-service/shared-service.service';
 
 const config = new AuthServiceConfig([
   {
@@ -38,7 +40,7 @@ export function provideConfig() {
     NavbarComponent,
     FeedComponent,
     ProfileComponent,
-    CreateComponent
+    CreateComponent 
   ],
   imports: [
     BrowserModule,
@@ -53,7 +55,9 @@ export function provideConfig() {
     {
       provide: AuthServiceConfig,
       useFactory: provideConfig
-    }
+    },
+    // {provide : HTTP_INTERCEPTORS, useClass : AuthGuard, multi:true},
+    SharedServiceService
   ],
   bootstrap: [AppComponent]
 })

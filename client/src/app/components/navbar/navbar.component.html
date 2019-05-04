@@ -1,31 +1,29 @@
 <mat-toolbar color="warn">
   <span>Identify</span>
-  <!-- <button mat-button (click)="navigate('feed')">Feed</button> -->
-  <!-- <button mat-button (click)="navigate('create')" *ngIf="this.authSvc.loggedIn()">Create</button> -->
+ 
   <span class="example-spacer"></span>
-  <button mat-icon-button  (click)="signInWithGoogle()" *ngIf="!isLoggedIn">
+  <button mat-icon-button (click)="signInWithGoogle()" *ngIf="!this.sharedServiceService.loggedIn()">
     <img src="assets/signIn.svg" alt="sign in with google">
   </button>
-  <button mat-icon-button  (click)="signOut()"  *ngIf="isLoggedIn">
-      <i class="material-icons">
-          exit_to_app
-      </i>
+  <button mat-icon-button (click)="signOut()" *ngIf="this.sharedServiceService.loggedIn()">
+    <i class="material-icons">
+      exit_to_app
+    </i>
   </button>
-  <!-- <div *ngIf="!this.authSvc.loggedIn()">
-    <button mat-button (click)="navigate('login')"> Login</button>
-  </div> -->
-
-  <!-- <div *ngIf="this.authSvc.loggedIn()">
+  <div *ngIf="this.sharedServiceService.loggedIn()">
     <span>{{user.username}}</span>
     <img src="{{user.avtar}}" alt="Avatar" class="avatar" [matMenuTriggerFor]="menu">
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item>My account</button>
-      <button mat-menu-item (click)="this.authSvc.logout()" *ngIf="this.authSvc.loggedIn()">Logout</button>
-    </mat-menu>
-  </div> -->
+  </div>
 </mat-toolbar>
+
 <mat-tab-group mat-stretch-tabs color="warn">
-  <mat-tab label="Profile"> <app-profile  [user]="user"></app-profile> </mat-tab>
-  <mat-tab label="Feed"> <app-feed></app-feed> </mat-tab>
-  <mat-tab label="Post"> <app-create></app-create> </mat-tab>
+  <mat-tab label="Profile">
+    <app-profile [user]="user"></app-profile>
+  </mat-tab>
+  <mat-tab label="Feed">
+    <app-feed></app-feed>
+  </mat-tab>
+  <mat-tab label="Post">
+    <app-create></app-create>
+  </mat-tab>
 </mat-tab-group>

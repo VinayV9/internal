@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService, GoogleLoginProvider, SocialUser } from 'angularx-social-login';
+import { AuthService, GoogleLoginProvider } from 'angularx-social-login';
 import { SharedServiceService } from 'src/app/services/shared-service/shared-service.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { SharedServiceService } from 'src/app/services/shared-service/shared-ser
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  user: SocialUser;
+  user: any;
   isLoggedIn: boolean =false;
   constructor(
     private authService: AuthService,
@@ -16,35 +16,39 @@ export class NavbarComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this.authService.authState.subscribe((user) => {
-      this.user = user;
-      this.isLoggedIn = (user != null);
-     });
+    this.sharedServiceService.cast.subscribe(user => this.user = user);
   }
   
   signInWithGoogle(): void{
-    console.log("sign in with google");
     this.authService
-    .signIn(GoogleLoginProvider.PROVIDER_ID);
-    // .then(
-    //   (user) => {
-    //     this.user = user;
-    //     //this.sendGoogleAuthToken(user.idToken);
-    //   },
-    //   (error) => { console.log("ERROR: error with sign in"); }
-    // )
+    .signIn(GoogleLoginProvider.PROVIDER_ID)
+    .then(
+      (user) => {
+        this.sendGoogleAuthToken(user.idToken);
+      },
+      (error) => { console.log("ERROR: error with sign in: "+error); }
+    )
   }
 
   signOut(): void {
     this.authService.signOut();
+    localStorage.removeItem('token');
+  }
+
+  loggedIn(){
+    return !!localStorage.getItem('token');  
   }
 
   sendGoogleAuthToken(token: string){
     this.sharedServiceService
     .sendGoogleAuthToken(token)
     .subscribe(
-      (data) => {},
-      (error) => { console.log("ERROR: error with sign in")}
+      (data: any) => {
+        console.log(data);
+        localStorage.setItem('token', data.token);
+        this.sharedServiceService.setProfile(data);
+      },
+      (error) => { console.log("ERROR: error with sign in: "+ error)}
     );
   }
   

@@ -2,11 +2,13 @@ const express = require('express')
 const router = express.Router()
 const authSvc = require('./service/authService')
 
+router.post('/auth/google', authSvc.checkGoogleUser)
 
-router.post('auth/register', authSvc.register)
-router.post('auth/google', authSvc.googleAuth)
+// router.get('/user/profile', userSvc.getProfile)
+// router.put('/user/profile', userSvc.updateProfile)
 
-router.post('user/post', tokenCheck, userSvc.insertPost)
-router.get('user/posts', userSvc.getPosts)
+// router.get('/user/posts', )
+// router.post('/user/post', )
+
 
 module.exports = router
