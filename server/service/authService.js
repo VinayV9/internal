@@ -8,18 +8,21 @@ dotenv.config()
 const auth = new OAuth2Client(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CONSUMER_SECRET,
-    "http://loc alhost:4200"
+    "http://localhost:4200"
 )
 
 let authSvc = {}
 
-authSvc.googleAuth =  (token) => {
-    return auth.
-    verifyIdToken({
-        idToken: token,
+authSvc.checkGoogleUser = (req, res) => {
+
+    auth.verifyIdToken({
+        idToken: req.body.token,
         audience: process.env.GOOGLE_CLIENT_ID
-    })
-    .then(login => {
+    }, (err, login) =>{
+        if(err){
+          console.log("ERROR: "+err)
+          res.send(404).send({ message: "error with signin" })
+        }
         let payload = login.getPayload()
         let audience = payload.aud
        
@@ -27,83 +30,41 @@ authSvc.googleAuth =  (token) => {
             throw new Error(err)
         }
 
-        promise(payload)
-        .then((data)=>{
-           return data
-        })
-        .catch((err)=>{
-           throw new Error(err)
-        })
-        
-        
-       
-    })
-    .catch((err) => {
-        throw new Error(err)
-    })
-}
-
-authSvc.checkGoogleUser = (req, res) => {
-    try{
-        authSvc.googleAuth(req.body.token)
-        .then(data => {
-            console.log("hello "+ data)
-            res.status(200).send(data)
-        })
-        .catch((err) => {
-            throw new Error(err)
-        })
-    }catch (err){
-        console.log("ERROR: "+err)
-        res.send(404).send({ message: "error with signin" })
-    }
-}
-
-authSvc.createToken = (userId) => {
-    return jwt.sign({ user: userId }, process.env.JWT_SECRET_KEY)
-}
-
-let createUser =  (payload) => {
-    return new Promise( async (resolve, reject) => {
-        let newUser = new User({ email: payload['email'], avtar: payload['picture'], username: payload['name'] })
-        let token = authSvc.createToken(newUser._id)
-    
-        await newUser.save((err, data) => {
-            if (err) {
-                reject(err)
-            }
-            let res = {
-                token: token, 
-                username: data.username,
-                avtar: data.avtar
-            }
-            resolve(res)
-        })
-    })
-}
-
-let promise = (payload) =>{
-    return new Promise( (resolve, reject) => {
         User.findOne({ email: payload['email'] }, (err, user) => {
 
-            if (err) { reject(err) }
+            if (err) { res.send(404).send({ message: "error with signin" }) }
             if (!user) {
-                createUser(payload)
-                .then((data) => {
-                    resolve(data)
+                let newUser = new User({ email: payload['email'], avtar: payload['picture'], username: payload['name'] })
+                let token = authSvc.createToken(newUser._id)
+            
+                newUser.save((err, data) => {
+                    if (err) {
+                        res.send(404).send({ message: "error with signin" })
+                    }
+                    let userRes = {
+                        token: token, 
+                        username: data.username,
+                        avtar: data.avtar
+                    }
+                    res.status(200).send(userRes)
                 })
-                .catch((err)=>{ throw new Error(err)}) 
             } else {
-                let res = { 
+                let userRes = { 
                     token : authSvc.createToken(user._id),
                     username: user.username,
                     avtar: user.avtar
                 }
-                console.log(res)
-                resolve(res)
+                console.log(userRes)
+                res.status(200).send(userRes)
             }
         })
+
     })
+    
+}
+
+authSvc.createToken = (userId) => {
+    return jwt.sign({ user: userId }, process.env.JWT_SECRET_KEY)
 }
 
 module.exports = authSvc
