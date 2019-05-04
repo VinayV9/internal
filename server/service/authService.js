@@ -44,7 +44,9 @@ authSvc.checkGoogleUser = (req, res) => {
                     let userRes = {
                         token: token, 
                         username: data.username,
-                        avtar: data.avtar
+                        avtar: data.avtar,
+                        email: data.email,
+                        id: data._id
                     }
                     res.status(200).send(userRes)
                 })
@@ -52,9 +54,10 @@ authSvc.checkGoogleUser = (req, res) => {
                 let userRes = { 
                     token : authSvc.createToken(user._id),
                     username: user.username,
-                    avtar: user.avtar
+                    avtar: user.avtar,
+                    email: user.email,
+                    id: user._id
                 }
-                console.log(userRes)
                 res.status(200).send(userRes)
             }
         })

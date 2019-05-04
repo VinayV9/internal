@@ -2,17 +2,17 @@
   <span>Identify</span>
  
   <span class="example-spacer"></span>
-  <button mat-icon-button (click)="signInWithGoogle()" *ngIf="!this.sharedServiceService.loggedIn()">
+  <button mat-icon-button (click)="signInWithGoogle()" *ngIf="!user">
     <img src="assets/signIn.svg" alt="sign in with google">
   </button>
-  <button mat-icon-button (click)="signOut()" *ngIf="this.sharedServiceService.loggedIn()">
+  <button mat-icon-button (click)="signOut()" *ngIf="user">
     <i class="material-icons">
       exit_to_app
     </i>
   </button>
-  <div *ngIf="this.sharedServiceService.loggedIn()">
+  <div *ngIf="user">
     <span>{{user.username}}</span>
-    <img src="{{user.avtar}}" alt="Avatar" class="avatar" [matMenuTriggerFor]="menu">
+    <img src="{{user.avtar}}" alt="Avatar" class="avatar">
   </div>
 </mat-toolbar>
 

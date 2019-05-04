@@ -32,21 +32,18 @@ export class NavbarComponent implements OnInit {
 
   signOut(): void {
     this.authService.signOut();
-    localStorage.removeItem('token');
+    this.sharedServiceService.logOut();
   }
 
-  loggedIn(){
-    return !!localStorage.getItem('token');  
-  }
+  
 
   sendGoogleAuthToken(token: string){
     this.sharedServiceService
     .sendGoogleAuthToken(token)
     .subscribe(
       (data: any) => {
-        console.log(data);
-        localStorage.setItem('token', data.token);
         this.sharedServiceService.setProfile(data);
+        localStorage.setItem('token', data.token);
       },
       (error) => { console.log("ERROR: error with sign in: "+ error)}
     );
