@@ -1,37 +1,19 @@
 const mongoDB = require('mongoose')
 
 const post = mongoDB.Schema({
-    username : {
-        type: String,
-        required: [true, "username is required"]
-    },
-    avtar:{
-        type: String,
-        required: [true, "image url required"],
-        default: "https://www.w3schools.com/w3images/avatar6.png"
-    },
-    email : {
+    fileName : {
         type: String,
         unique: true,
-        trim:true,
-        required: [true, "email is required"]
+        trim:true
     },
-    firstName: {
+    description: {
         type: String,
         default: ""
     },
-    lastName: {
+    userId: {
         type: String,
-        default: ""
-    },
-    company: {
-        type: String,
-        default: ""
-    },
-    package: {
-        type: Number,
         default: ""
     }
 })
 
-module.exports = mongoDB.model('Post', post)
+module.exports = mongoDB.model('Feed', post)

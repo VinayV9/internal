@@ -28,6 +28,10 @@ export class SharedServiceService {
     return this.http.get(`${this.baseUrl}/api/user/profile/${id}`,  httpOptions)
   }
 
+  getPosts(){
+    return this.http.get(`${this.baseUrl}/api/posts`,  httpOptions)
+  }
+
   setProfile(data){
     let newUser = {
       username:data.username,
@@ -51,11 +55,11 @@ export class SharedServiceService {
 
   public uploadImage(image: File, description: string): any {
     const formData = new FormData();
-
+    console.log(image);
     formData.append('image', image);
     formData.append('description', description)
 
-    return this.http.post('/api/v1/image-upload', formData);
+    return this.http.post(`${this.baseUrl}/api/user/post`, formData);
   }
 
 }

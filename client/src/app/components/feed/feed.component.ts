@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SharedServiceService } from 'src/app/services/shared-service/shared-service.service';
 
 @Component({
   selector: 'app-feed',
@@ -6,10 +7,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./feed.component.scss']
 })
 export class FeedComponent implements OnInit {
-
-  constructor() { }
+  posts: any = []
+  constructor(private sharedServiceService: SharedServiceService) { }
 
   ngOnInit() {
+     this.sharedServiceService.getPosts()
+     .subscribe(
+       (posts) => { this.posts = posts},
+       (err) => { console.log(err); }
+     )
   }
 
 }
