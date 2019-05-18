@@ -3,7 +3,8 @@ const dotenv = require('dotenv')
 
 dotenv.config()
 
-module.exports = verifyUser = function(req, res, next){
+module.exports = function(req, res, next){
+    
     if(!req.headers.authorization) {
         return res.status(401).send('authorization header not found')
     }
@@ -11,6 +12,7 @@ module.exports = verifyUser = function(req, res, next){
     if(token === 'null') {
         return res.status(401).send('Unauthorized request')    
     }
+  
     let payload = jwt.verify(token, process.env.JWT_SECRET_KEY)
     if(!payload) {
         return res.status(401).send('Unauthorized request')    

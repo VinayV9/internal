@@ -34,10 +34,10 @@ export class CreateComponent implements OnInit {
 
       this.sharedServiceService.uploadImage(this.selectedFile.file, this.description).subscribe(
         (res) => {
-        
+           console.log(res);
         },
         (err) => {
-        
+          console.log(err);
         })
     });
     reader.readAsDataURL(this.file);

@@ -56,7 +56,7 @@ export function provideConfig() {
       provide: AuthServiceConfig,
       useFactory: provideConfig
     },
-    // {provide : HTTP_INTERCEPTORS, useClass : AuthGuard, multi:true},
+    {provide : HTTP_INTERCEPTORS, useClass : AuthGuard, multi:true},
     SharedServiceService
   ],
   bootstrap: [AppComponent]
